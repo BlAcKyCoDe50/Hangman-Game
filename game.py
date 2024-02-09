@@ -56,15 +56,7 @@ def check():
     else:
         print('wrong answer')
         
-
-
-
-# def score():
-
-
-
-
-
+        
 img1=ImageTk.PhotoImage(Image.open(letterlist[0]))
 btn1=Button(root,image=img1,bg="#B0E9FD",bd=0)
 
