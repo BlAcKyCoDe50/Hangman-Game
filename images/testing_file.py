@@ -61,10 +61,6 @@ canvas = Canvas(root, width=140, height=140)
 canvas.place(x=820, y=90)
 new_word()
 
-# namevalue = StringVar()
-# ent_name = Entry(root, width=70, borderwidth=10, textvariable=namevalue)
-# ent_name.place(x=150, y=150)
-
 score = 0
 
 def check():
@@ -84,24 +80,22 @@ def check():
     score_label.config(text=f"Score: {score}")
 
 def clear_entry():
-    items = canvas.find_all()
-    for item in items:
-        canvas.delete(item)
+    pass
 
 def insert_letter(letter):
     current_text = ent_name.get()
     ent_name.delete(0, END)
     ent_name.insert(0, current_text + letter)
 
-
-button2 = Button(root, text='CLEAR ENTRY', command=clear_entry(), font=("impact", 15), bg='#201c4e', fg='white', bd=0)
+button2 = Button(root, text='CLEAR ENTRY', command=lambda: ent_name.delete(0, END), font=("impact", 15), bg='#201c4e', fg='white', bd=0)
 button2.place(x=300, y=200)
+
 
 def show_score():
     messagebox.showinfo("Score", f"Your current score is: {score}")
 
-button1 = Button(root, text='VIEW SCORE', command=show_score, font=("impact", 20), bg='#201c4e', fg='white', bd=0)
-button1.place(x=850, y=440)
+# button1 = Button(root, text='VIEW SCORE', command=show_score, font=("impact", 20), bg='#201c4e', fg='white', bd=0)
+# button1.place(x=850, y=440)
 
 
 button = Button(root, text='CHECK', command=check, font=("impact", 20), bg='#201c4e', fg='white', bd=0)
@@ -116,9 +110,14 @@ button.place(x=750, y=440)
 button3 = Button(root, text='CHANGE PICTURE', command=new_word, font=("impact", 20), bg='#201c4e', fg='white', bd=0)
 button3.place(x=150, y=440)
 
-button4 = Button(root, text='EXIT', command=root.quit, font=("impact", 20), bg='#201c4e', fg='white', bd=0)
-button4.place(x=1000, y=10)
-
+# button4 = Button(root, text='EXIT', command=root.quit, font=("impact", 20), bg='#201c4e', fg='white', bd=0)
+# button4.place(x=1000, y=10)
+quit_image = Image.open('exit.png')
+quitbtn = ImageTk.PhotoImage(quit_image)
+image_width, image_height = quit_image.size
+quit = Button(root, image=quitbtn, bd=0, command=root.quit)
+quit.place(x=950, y=10)
+quit.config(width=image_width, height=image_height)
         
         
 img1 = ImageTk.PhotoImage(Image.open(letterlist[0]))  # Image for button A
@@ -207,12 +206,11 @@ btn26.place(x=690,y=360)
 button = Button(root, text='CHECK',command=check, font=("impact", 20), bg='#201c4e', fg='white', bd=0)
 button.place(x=750, y=440)
 
-button1 = Button(root, text='VIEW SCORE', font=("impact", 20), bg='#201c4e', fg='white', bd=0)
-button1.place(x=850, y=440)
+# button1 = Button(root, text='VIEW SCORE', font=("impact", 20), bg='#201c4e', fg='white', bd=0)
+# button1.place(x=850, y=440)
 
-button2 = Button(root, text='CLEAR ENTRY', font=("impact", 15), bg='#201c4e', fg='white', bd=0)
-button2.place(x=300, y=200)
-
+# button2 = Button(root, text='CLEAR ENTRY', font=("impact", 15), bg='#201c4e', fg='white', bd=0)
+# button2.place(x=300, y=200)
 
 
 root.mainloop()
