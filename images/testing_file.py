@@ -4,10 +4,6 @@ from string import ascii_uppercase
 import random
 from tkinter import messagebox
 
-
-
-
-
 # img = PhotoImage(file='LOSE.png')      
 # canvas.create_image(20,20, anchor=NW, image=img)
 
@@ -28,26 +24,90 @@ letterlist=['A.png','B.png','C.png','D.png','E.png','F.png','G.png','H.png','I.p
 l=['apple','banana','orange','watermelon','cherry','strawberry','bottle','ball','pendrive']
 s='.png'
 num=random.randint(1,7)
+
+word = random.choice(letterlist)
+display_word = '_' * len(word)  # Placeholder for the display word
 words=l[num]+s
 
-
-canvas = Canvas(root, width = 100, height = 140)      
-canvas.place(x=820,y=90)    
-img = PhotoImage(file=words)      
-canvas.create_image(20,20, anchor=NW, image=img)
+hangman_images = []
+for i in range(1, 7):
+    try:
+        image = Image.open(f'i.png')  # Ensure these image paths are correct
+        hangman_images.append(ImageTk.PhotoImage(image))
+    except Exception as e:
+        print(f"Error loading image hangman{i}.png: {e}")
 
 length=len(l[num])
 print(length)
 
+incorrect_guesses = 0
+max_incorrect = 7  # Number of hangman stages
+score = 0
+guessed_letters = set()
 namevalue= StringVar()
 
 ent_name = Entry(root, width=70, borderwidth=10, textvariable=namevalue)
-ent_name.place(x=150, y=150)
+ent_name.place(x=120, y=120)
 
 score = 0
 
 score_label = Label(root, text=f"Score: {score}", font=("impact", 20), bg='#201c4e', fg='white', bd=0)
 score_label.place(x=10, y=10)
+
+# ****************************************************************************
+
+# Load hangman images for each step
+hangman_images = [ImageTk.PhotoImage(Image.open(f'{i}.png')) for i in range(1, 7)]
+
+# Initialize game state
+incorrect_guesses = 0
+max_incorrect = len(hangman_images)  # Number of hangman stages
+
+hangman_label = Label(root, image=hangman_images[0])
+hangman_label.place(x=820, y=250)
+
+# score_label = Label(root, text=f"Score: {score}", font=("impact", 20))
+# score_label.place(x=20, y=20)
+
+
+# ************************************************************************************
+
+# Function to update the hangman image and score
+def update_hangman():
+    global incorrect_guesses
+    if incorrect_guesses < len(hangman_images):
+        hangman_label.config(image=hangman_images[incorrect_guesses])
+        hangman_label.image = hangman_images[incorrect_guesses]  # Keep a reference to avoid garbage collection
+    else:
+        print("No more hangman images available.")
+
+
+
+
+def guess_letter(letter):
+    global incorrect_guesses, score, display_word
+    if letter in guessed_letters:
+        return  # Letter has already been guessed
+
+    guessed_letters.add(letter)
+    if letter in word:
+        updated_display = ''.join(c if c in guessed_letters else '_' for c in word)
+        if '_' not in updated_display:
+            messagebox.showinfo("Congratulations", "You've won the game!")
+        score += 10  # Increase score for correct guess
+    else:
+        incorrect_guesses += 1
+        update_hangman()  # Update hangman image for incorrect guess
+        if incorrect_guesses >= max_incorrect:
+            messagebox.showinfo("Game Over", "You've lost the game!")
+            # Additional game over handling can be added here, like disabling further guesses
+
+    score_label.config(text=f"Score: {score}")
+
+
+
+
+
 
 def new_word():
     global word, num, img
@@ -99,16 +159,12 @@ def show_score():
 
 
 button = Button(root, text='CHECK', command=check, font=("impact", 20), bg='#201c4e', fg='white', bd=0)
-button.place(x=750, y=440)
+button.place(x=750, y=480)
 
-# button1 = Button(root, text='VIEW SCORE', command=show_score, font=("impact", 20), bg='#201c4e', fg='white', bd=0)
-# button1.place(x=850, y=440)
 
-# button2 = Button(root, text='CLEAR ENTRY', command=clear_entry, font=("impact", 15), bg='#201c4e', fg='white', bd=0)
-# button2.place(x=300, y=200)
 
 button3 = Button(root, text='CHANGE PICTURE', command=new_word, font=("impact", 20), bg='#201c4e', fg='white', bd=0)
-button3.place(x=150, y=440)
+button3.place(x=150, y=480)
 
 # button4 = Button(root, text='EXIT', command=root.quit, font=("impact", 20), bg='#201c4e', fg='white', bd=0)
 # button4.place(x=1000, y=10)
@@ -164,7 +220,7 @@ btn13=Button(root,image=img13,bg="#B0E9FD",bd=0,command=lambda: insert_letter('M
 btn13.place(x=740,y=300)
 img14=ImageTk.PhotoImage(Image.open(letterlist[13]))
 btn14=Button(root,image=img14,bg="#B0E9FD",bd=0,command=lambda: insert_letter('N'))
-btn14.place(x=800,y=300)
+btn14.place(x=10,y=360)
 img15=ImageTk.PhotoImage(Image.open(letterlist[14]))
 btn15=Button(root,image=img15,bg="#B0E9FD",bd=0,command=lambda: insert_letter('O'))
 btn15.place(x=70,y=360)
@@ -203,8 +259,8 @@ btn26=Button(root,image=img26,bg="#B0E9FD",bd=0,command=lambda: insert_letter('Y
 btn26.place(x=690,y=360)
 
 
-button = Button(root, text='CHECK',command=check, font=("impact", 20), bg='#201c4e', fg='white', bd=0)
-button.place(x=750, y=440)
+# button = Button(root, text='CHECK',command=check, font=("impact", 20), bg='#201c4e', fg='white', bd=0)
+# button.place(x=750, y=440)
 
 # button1 = Button(root, text='VIEW SCORE', font=("impact", 20), bg='#201c4e', fg='white', bd=0)
 # button1.place(x=850, y=440)
