@@ -6,10 +6,10 @@ from tkinter import messagebox
 
 
 
-'''
 
-img = PhotoImage(file='LOSE.png')      
-canvas.create_image(20,20, anchor=NW, image=img'''
+
+# img = PhotoImage(file='LOSE.png')      
+# canvas.create_image(20,20, anchor=NW, image=img)
 
 # run=True
 # while run:
@@ -28,12 +28,12 @@ letterlist=['A.png','B.png','C.png','D.png','E.png','F.png','G.png','H.png','I.p
 l=['apple','banana','orange','watermelon','cherry','strawberry','bottle','ball','pendrive']
 s='.png'
 num=random.randint(1,7)
-word=l[num]+s
+words=l[num]+s
 
 
-canvas = Canvas(root, width = 140, height = 140)      
+canvas = Canvas(root, width = 100, height = 140)      
 canvas.place(x=820,y=90)    
-img = PhotoImage(file=word)      
+img = PhotoImage(file=words)      
 canvas.create_image(20,20, anchor=NW, image=img)
 
 length=len(l[num])
@@ -44,17 +44,75 @@ namevalue= StringVar()
 ent_name = Entry(root, width=70, borderwidth=10, textvariable=namevalue)
 ent_name.place(x=150, y=150)
 
-def check():
-    value=ent_name.get()
-    a=word.rstrip('.png')
-    if value==a:
-        loseimg=PhotoImage(file='LOSE.png')  
-        canvas.configure(image=PhotoImage(file='LOSE.png'))
-        canvas.image=loseimg
+score = 0
 
-    
+score_label = Label(root, text=f"Score: {score}", font=("impact", 20), bg='#201c4e', fg='white', bd=0)
+score_label.place(x=10, y=10)
+
+def new_word():
+    global word, num, img
+    num = random.randint(0, len(l) - 1)
+    word = l[num] + s
+    img = PhotoImage(file=word)
+    canvas.create_image(20, 20, anchor=NW, image=img)
+    canvas.image = img  # Keep a reference to avoid garbage collection
+
+canvas = Canvas(root, width=140, height=140)
+canvas.place(x=820, y=90)
+new_word()
+
+# namevalue = StringVar()
+# ent_name = Entry(root, width=70, borderwidth=10, textvariable=namevalue)
+# ent_name.place(x=150, y=150)
+
+score = 0
+
+def check():
+    global score
+    value = ent_name.get()
+    a = word.rstrip('.png')
+    if value.lower() == a:
+        score += 1
+        messagebox.showinfo("Result", "Congratulations! You guessed it right!")
     else:
-        print('wrong answer')
+        lose_img = PhotoImage(file='LOSE.png')
+        canvas.create_image(20, 20, anchor=NW, image=lose_img)
+        canvas.image = lose_img  # Keep a reference to avoid garbage collection
+        messagebox.showinfo("Result", "Sorry, wrong guess. Try again!")
+    
+    # Update the score label
+    score_label.config(text=f"Score: {score}")
+
+def clear_entry():
+    items = canvas.find_all()
+    for item in items:
+        canvas.delete(item)
+
+button2 = Button(root, text='CLEAR ENTRY', command=clear_entry(), font=("impact", 15), bg='#201c4e', fg='white', bd=0)
+button2.place(x=300, y=200)
+
+def show_score():
+    messagebox.showinfo("Score", f"Your current score is: {score}")
+
+button1 = Button(root, text='VIEW SCORE', command=show_score, font=("impact", 20), bg='#201c4e', fg='white', bd=0)
+button1.place(x=850, y=440)
+
+
+button = Button(root, text='CHECK', command=check, font=("impact", 20), bg='#201c4e', fg='white', bd=0)
+button.place(x=750, y=440)
+
+# button1 = Button(root, text='VIEW SCORE', command=show_score, font=("impact", 20), bg='#201c4e', fg='white', bd=0)
+# button1.place(x=850, y=440)
+
+# button2 = Button(root, text='CLEAR ENTRY', command=clear_entry, font=("impact", 15), bg='#201c4e', fg='white', bd=0)
+# button2.place(x=300, y=200)
+
+button3 = Button(root, text='CHANGE PICTURE', command=new_word, font=("impact", 20), bg='#201c4e', fg='white', bd=0)
+button3.place(x=150, y=440)
+
+button4 = Button(root, text='EXIT', command=root.quit, font=("impact", 20), bg='#201c4e', fg='white', bd=0)
+button4.place(x=1000, y=10)
+
         
         
 img1=ImageTk.PhotoImage(Image.open(letterlist[0]))
