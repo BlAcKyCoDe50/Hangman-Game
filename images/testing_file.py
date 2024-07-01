@@ -81,9 +81,6 @@ def update_hangman():
     else:
         print("No more hangman images available.")
 
-
-
-
 def guess_letter(letter):
     global incorrect_guesses, score, display_word
     if letter in guessed_letters:
@@ -103,11 +100,6 @@ def guess_letter(letter):
             # Additional game over handling can be added here, like disabling further guesses
 
     score_label.config(text=f"Score: {score}")
-
-
-
-
-
 
 def new_word():
     global word, num, img
