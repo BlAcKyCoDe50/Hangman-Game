@@ -29,6 +29,7 @@ word = random.choice(letterlist)
 display_word = '_' * len(word)  # Placeholder for the display word
 words=l[num]+s
 
+
 hangman_images = []
 for i in range(1, 7):
     try:
@@ -122,11 +123,14 @@ def check():
     if value.lower() == a:
         score += 1
         messagebox.showinfo("Result", "Congratulations! You guessed it right!")
+        new_word()
     else:
         lose_img = PhotoImage(file='LOSE.png')
         canvas.create_image(20, 20, anchor=NW, image=lose_img)
         canvas.image = lose_img  # Keep a reference to avoid garbage collection
         messagebox.showinfo("Result", "Sorry, wrong guess. Try again!")
+        score -= 1
+        new_word()
     
     # Update the score label
     score_label.config(text=f"Score: {score}")
