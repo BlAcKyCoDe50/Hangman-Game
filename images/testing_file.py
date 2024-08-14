@@ -23,7 +23,7 @@ a.place(x=0,y=0)
 letterlist=['A.png','B.png','C.png','D.png','E.png','F.png','G.png','H.png','I.png','J.png','K.png','L.png','M.png','N.png','O.png','P.png','Q.png','R.png','S.png','T.png','U.png','D.png','V.png','W.png','X.png','Y.png','Z.png']
 l=['apple','banana','orange','watermelon','cherry','strawberry','bottle','ball','pendrive']
 s='.png'
-num=random.randint(1,7)
+num=random.randint(0,8)
 
 word = random.choice(letterlist)
 display_word = '_' * len(word)  # Placeholder for the display word
@@ -31,7 +31,7 @@ words=l[num]+s
 
 
 hangman_images = []
-for i in range(1, 7):
+for i in range(0, 7):
     try:
         image = Image.open(f'i.png')  # Ensure these image paths are correct
         hangman_images.append(ImageTk.PhotoImage(image))
@@ -76,10 +76,12 @@ hangman_label.place(x=820, y=250)
 # Function to update the hangman image and score
 def update_hangman():
     global incorrect_guesses
-    if incorrect_guesses < len(hangman_images):
+    if incorrect_guesses <= len(hangman_images):
         hangman_label.config(image=hangman_images[incorrect_guesses])
         hangman_label.image = hangman_images[incorrect_guesses]  # Keep a reference to avoid garbage collection
+        print(incorrect_guesses)
     else:
+        hangman_label.config(image=hangman_images[-1])
         print("No more hangman images available.")
 
 def guess_letter(letter):
@@ -92,13 +94,15 @@ def guess_letter(letter):
         updated_display = ''.join(c if c in guessed_letters else '_' for c in word)
         if '_' not in updated_display:
             messagebox.showinfo("Congratulations", "You've won the game!")
-        score += 10  # Increase score for correct guess
+        score += 1  # Increase score for correct guess
     else:
         incorrect_guesses += 1
-        update_hangman()  # Update hangman image for incorrect guess
+        if incorrect_guesses < max_incorrect:
+            update_hangman()
         if incorrect_guesses >= max_incorrect:
             messagebox.showinfo("Game Over", "You've lost the game!")
-            # Additional game over handling can be added here, like disabling further guesses
+            new_word()
+            #Additional game over handling can be added here, like disabling further guesses
 
     score_label.config(text=f"Score: {score}")
 
@@ -119,18 +123,22 @@ score = 0
 def check():
     global score
     value = ent_name.get()
+    guess_letter(value)
     a = word.rstrip('.png')
     if value.lower() == a:
         score += 1
         messagebox.showinfo("Result", "Congratulations! You guessed it right!")
         new_word()
+        # update_hangman()
     else:
         lose_img = PhotoImage(file='LOSE.png')
         canvas.create_image(20, 20, anchor=NW, image=lose_img)
         canvas.image = lose_img  # Keep a reference to avoid garbage collection
         messagebox.showinfo("Result", "Sorry, wrong guess. Try again!")
+        update_hangman()
         score -= 1
         new_word()
+        
     
     # Update the score label
     score_label.config(text=f"Score: {score}")
@@ -171,12 +179,11 @@ quit = Button(root, image=quitbtn, bd=0, command=root.quit)
 quit.place(x=950, y=10)
 quit.config(width=image_width, height=image_height)
         
-        
+ # Keyboard buttons     
 img1 = ImageTk.PhotoImage(Image.open(letterlist[0]))  # Image for button A
 btn1 = Button(root, image=img1, bg="#B0E9FD", bd=0, command=lambda: insert_letter('A'))
 btn1.place(x=10, y=300)
-
-
+ 
 btn1.place(x=10,y=300)
 img2=ImageTk.PhotoImage(Image.open(letterlist[1]))
 btn2=Button(root,image=img2,bg="#B0E9FD",bd=0,command=lambda: insert_letter('B'))
